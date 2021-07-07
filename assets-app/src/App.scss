@@ -54,5 +54,25 @@ section {
       width: 100%;
       table-layout: fixed;
     }
+
+    thead th {
+      font-weight: 500;
+      &::before,
+      &::after {
+        content: " ";
+        float: right;
+        border-right: 4px solid transparent;
+        border-left: 4px solid transparent;
+      }
+      &::before {
+        margin-left: -10px;
+        margin-top: 0.2em;
+        border-bottom: 5px solid rgba(255, 255, 255, 0.5);
+      }
+      &::after {
+        margin-top: calc(0.2em + 7px);
+        border-top: 5px solid rgba(255, 255, 255, 0.5);
+      }
+    }
   }
 }
