@@ -2,12 +2,24 @@
   color: blue;
 }
 
+.bg-primary {
+  background-color: rgba(62, 62, 184, 0.5);
+}
+
 .text-danger {
   color: red;
 }
 
+.bg-danger {
+  background-color: red;
+}
+
 .text-success {
   color: green;
+}
+
+.bg-success {
+  background-color: rgba(27, 163, 27, 0.5);
 }
 
 .color-white {

@@ -17,7 +17,7 @@ export enum SortDirection {
 
 export type ConfigParameters = {
   priority: number;
-  color: string;
+  className: string;
 };
 
 export type AssetColumnConfig = {

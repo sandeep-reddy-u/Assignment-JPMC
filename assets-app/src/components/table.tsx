@@ -1,8 +1,10 @@
 import { MouseEvent, useEffect, useState } from "react";
 import sampleData from "../data/sampleData.json";
 import {
+  AssetClassConfig,
   columns,
   getCompareFunction,
+  getTableCellClass,
   getTableColumnHeaderClass,
 } from "../helper/common";
 import { Asset, SortDirection } from "../types/common.types";
@@ -66,9 +68,15 @@ export default function Table() {
           </thead>
           <tbody>
             {data.map((asset) => (
-              <tr key={"row_" + asset.assetClass + "_" + asset.ticker}>
+              <tr
+                key={"row_" + asset.assetClass + "_" + asset.ticker}
+                className={AssetClassConfig[asset.assetClass].className}
+              >
                 {columns.map((column) => (
-                  <td key={"cell_" + column.property}>
+                  <td
+                    key={"cell_" + column.property}
+                    className={getTableCellClass(asset, column.property)}
+                  >
                     {asset[column.property]}
                   </td>
                 ))}

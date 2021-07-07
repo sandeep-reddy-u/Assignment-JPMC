@@ -14,18 +14,18 @@ export const columns: {
   { property: "ticker", displayValue: "Ticker" },
 ];
 
-const AssetClassConfig: AssetColumnConfig = {
+export const AssetClassConfig: AssetColumnConfig = {
   [AssetClass.EQUITIES]: {
     priority: 1,
-    color: "blue",
+    className: "bg-primary color-white",
   },
   [AssetClass.MACRO]: {
     priority: 2,
-    color: "white",
+    className: "",
   },
   [AssetClass.CREDIT]: {
     priority: 3,
-    color: "green",
+    className: "bg-success color-white",
   },
 };
 
@@ -63,4 +63,16 @@ export function getTableColumnHeaderClass(
     return sortParams.sortDirection;
   }
   return "";
+}
+
+export function getTableCellClass(asset: Asset, property: keyof Asset) {
+  if (property === "price") {
+    if (asset.price > 0) {
+      return "text-primary price";
+    }
+    if (asset.price < 0) {
+      return "text-danger price";
+    }
+    return "price";
+  }
 }
