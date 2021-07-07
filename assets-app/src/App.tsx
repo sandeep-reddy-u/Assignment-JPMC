@@ -1,6 +1,6 @@
 import "./App.scss";
-import Header from "./components/header";
-import Table from "./components/table";
+import Header from "./components/header/header";
+import Table from "./components/table/table";
 
 function App() {
   return (

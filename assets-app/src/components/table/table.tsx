@@ -1,13 +1,14 @@
 import { MouseEvent, useEffect, useState } from "react";
-import sampleData from "../data/sampleData.json";
+import sampleData from "../../data/sampleData.json";
 import {
   AssetClassConfig,
   columns,
   getCompareFunction,
   getTableCellClass,
   getTableColumnHeaderClass,
-} from "../helper/common";
-import { Asset, SortDirection } from "../types/common.types";
+} from "../../helper/common";
+import { Asset, SortDirection } from "../../types/common.types";
+import "./table.scss";
 
 const assetsData = sampleData as Asset[];
 
