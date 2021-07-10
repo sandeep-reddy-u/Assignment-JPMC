@@ -10,167 +10,205 @@ import assetsData from "../../../data/sampleData.json";
 import { Asset, AssetClass } from "../../../types/common.types";
 import { AssetClassConfig, columns } from "../../../helper/common";
 
-afterEach(cleanup);
+describe("Should assets table", () => {
+  afterEach(cleanup);
 
-test("Show 'No assets found' text when assets list is empty", async () => {
-  render(<Table assetsData={[]} />);
+  test("Show 'No assets found' text when assets list is empty", async () => {
+    render(<Table assetsData={[]} />);
 
-  const noAssetsTextElement = screen.getByText("No assets found");
-  expect(noAssetsTextElement).toBeInTheDocument();
+    const noAssetsTextElement = screen.getByText("No assets found");
+    expect(noAssetsTextElement).toBeInTheDocument();
 
-  const tableElement = screen.queryByTestId("assets-table");
-  expect(tableElement).not.toBeInTheDocument();
-});
-
-test("Do not show 'No assets found' text when assets list is not empty", async () => {
-  render(<Table assetsData={assetsData as Asset[]} />);
-
-  const noAssetsTextElement = screen.queryByText("No assets found");
-  expect(noAssetsTextElement).not.toBeInTheDocument();
-});
-
-test("Do not render table when assets list is empty", async () => {
-  render(<Table assetsData={[]} />);
-
-  const tableElement = screen.queryByTestId("assets-table");
-  expect(tableElement).not.toBeInTheDocument();
-});
-
-test("Render table when assets list is empty", async () => {
-  render(<Table assetsData={assetsData as Asset[]} />);
-
-  const tableElement = screen.queryByTestId("assets-table");
-  expect(tableElement).toBeInTheDocument();
-});
-
-test("Render table headers - assetClass, price, ticker", async () => {
-  render(<Table assetsData={assetsData as Asset[]} />);
-
-  columns.forEach((column) => {
-    const columnHeaderElement = screen.getByTestId(
-      `column-header-${column.property}`
-    );
-    expect(columnHeaderElement).toHaveTextContent(column.displayValue);
+    const tableElement = screen.queryByTestId("assets-table");
+    expect(tableElement).not.toBeInTheDocument();
   });
-});
 
-test("Each row should display the correct data of asset", async () => {
-  const { container } = render(<Table assetsData={assetsData as Asset[]} />);
+  test("Do not show 'No assets found' text when assets list is not empty", async () => {
+    render(<Table assetsData={assetsData as Asset[]} />);
 
-  assetsData.forEach((asset, rowIndex) => {
-    getByTestId(container, `row-${rowIndex}`);
+    const noAssetsTextElement = screen.queryByText("No assets found");
+    expect(noAssetsTextElement).not.toBeInTheDocument();
+  });
 
-    columns.forEach((column, columnIndex) => {
-      const cell = getByTestId(container, `cell-${rowIndex}-${columnIndex}`);
-      expect(cell.innerHTML).toEqual(asset[column.property] + "");
+  test("Do not render table when assets list is empty", async () => {
+    render(<Table assetsData={[]} />);
+
+    const tableElement = screen.queryByTestId("assets-table");
+    expect(tableElement).not.toBeInTheDocument();
+  });
+
+  test("Render table when assets list is not empty", async () => {
+    render(<Table assetsData={assetsData as Asset[]} />);
+
+    const tableElement = screen.queryByTestId("assets-table");
+    expect(tableElement).toBeInTheDocument();
+  });
+
+  test("Render table headers - assetClass, price, ticker", async () => {
+    render(<Table assetsData={assetsData as Asset[]} />);
+
+    columns.forEach((column) => {
+      const columnHeaderElement = screen.getByTestId(
+        `column-header-${column.property}`
+      );
+      expect(columnHeaderElement).toHaveTextContent(column.displayValue);
     });
   });
-});
 
-test("Sort by 'Assert Class' column ascending", () => {
-  const { container } = render(<Table assetsData={assetsData as Asset[]} />);
+  test("Each row should display the correct data of asset", async () => {
+    const { container } = render(<Table assetsData={assetsData as Asset[]} />);
 
-  fireEvent.click(getByTestId(container, "column-header-assetClass"));
-  for (let i = 1; i < assetsData.length; i++) {
-    getByTestId(container, `row-${i}`);
-    const previousCell = getByTestId(container, `cell-${i - 1}-${0}`);
-    const currentCell = getByTestId(container, `cell-${i}-${0}`);
+    assetsData.forEach((asset, rowIndex) => {
+      getByTestId(container, `row-${rowIndex}`);
 
-    const previousCellPriority =
-      AssetClassConfig[previousCell.innerHTML as AssetClass].priority;
-    const currentCellPriority =
-      AssetClassConfig[currentCell.innerHTML as AssetClass].priority;
+      columns.forEach((column, columnIndex) => {
+        const cell = getByTestId(container, `cell-${rowIndex}-${columnIndex}`);
+        expect(cell.innerHTML).toEqual(asset[column.property] + "");
+      });
+    });
+  });
 
-    expect(previousCellPriority).toBeDefined();
-    expect(currentCellPriority).toBeDefined();
-    expect(previousCellPriority).toBeLessThanOrEqual(currentCellPriority);
-  }
-});
+  describe("Sort assets table by", () => {
+    test("'Assert Class' column in ascending order on 'Assert Class' header click once", () => {
+      const { container } = render(
+        <Table assetsData={assetsData as Asset[]} />
+      );
 
-test("Sort by 'Assert Class' column descending", () => {
-  const { container } = render(<Table assetsData={assetsData as Asset[]} />);
+      fireEvent.click(getByTestId(container, "column-header-assetClass"));
+      for (let i = 1; i < assetsData.length; i++) {
+        getByTestId(container, `row-${i}`);
+        const previousCell = getByTestId(container, `cell-${i - 1}-${0}`);
+        const currentCell = getByTestId(container, `cell-${i}-${0}`);
 
-  fireEvent.click(getByTestId(container, "column-header-assetClass"));
-  fireEvent.click(getByTestId(container, "column-header-assetClass"));
+        const previousCellPriority =
+          AssetClassConfig[previousCell.innerHTML as AssetClass].priority;
+        const currentCellPriority =
+          AssetClassConfig[currentCell.innerHTML as AssetClass].priority;
 
-  for (let i = 1; i < assetsData.length; i++) {
-    getByTestId(container, `row-${i}`);
-    const previousCell = getByTestId(container, `cell-${i - 1}-${0}`);
-    const currentCell = getByTestId(container, `cell-${i}-${0}`);
+        expect(previousCellPriority).toBeDefined();
+        expect(currentCellPriority).toBeDefined();
+        expect(previousCellPriority).toBeLessThanOrEqual(currentCellPriority);
+      }
+    });
 
-    const previousCellPriority =
-      AssetClassConfig[previousCell.innerHTML as AssetClass].priority;
-    const currentCellPriority =
-      AssetClassConfig[currentCell.innerHTML as AssetClass].priority;
+    test("'Assert Class' column in descending order on 'Assert Class' header click twice", () => {
+      const { container } = render(
+        <Table assetsData={assetsData as Asset[]} />
+      );
 
-    expect(previousCellPriority).toBeDefined();
-    expect(currentCellPriority).toBeDefined();
-    expect(previousCellPriority).toBeGreaterThanOrEqual(currentCellPriority);
-  }
-});
+      fireEvent.click(getByTestId(container, "column-header-assetClass"));
+      fireEvent.click(getByTestId(container, "column-header-assetClass"));
 
-test("Sort by 'price' column ascending", () => {
-  const { container } = render(<Table assetsData={assetsData as Asset[]} />);
+      for (let i = 1; i < assetsData.length; i++) {
+        getByTestId(container, `row-${i}`);
+        const previousCell = getByTestId(container, `cell-${i - 1}-${0}`);
+        const currentCell = getByTestId(container, `cell-${i}-${0}`);
 
-  fireEvent.click(getByTestId(container, "column-header-price"));
+        const previousCellPriority =
+          AssetClassConfig[previousCell.innerHTML as AssetClass].priority;
+        const currentCellPriority =
+          AssetClassConfig[currentCell.innerHTML as AssetClass].priority;
 
-  for (let i = 1; i < assetsData.length; i++) {
-    getByTestId(container, `row-${i}`);
-    const previousCell = getByTestId(container, `cell-${i - 1}-${1}`);
-    const currentCell = getByTestId(container, `cell-${i}-${1}`);
+        expect(previousCellPriority).toBeDefined();
+        expect(currentCellPriority).toBeDefined();
+        expect(previousCellPriority).toBeGreaterThanOrEqual(
+          currentCellPriority
+        );
+      }
+    });
 
-    expect(previousCell.innerHTML).not.toBeNaN();
-    expect(currentCell.innerHTML).not.toBeNaN();
-    expect(Number(previousCell.innerHTML)).toBeLessThanOrEqual(
-      Number(currentCell.innerHTML)
-    );
-  }
-});
+    test("'Price' column in ascending order on 'Price' header click once", () => {
+      const { container } = render(
+        <Table assetsData={assetsData as Asset[]} />
+      );
 
-test("Sort by 'price' column descending", () => {
-  const { container } = render(<Table assetsData={assetsData as Asset[]} />);
+      fireEvent.click(getByTestId(container, "column-header-price"));
 
-  fireEvent.click(getByTestId(container, "column-header-price"));
-  fireEvent.click(getByTestId(container, "column-header-price"));
+      for (let i = 1; i < assetsData.length; i++) {
+        getByTestId(container, `row-${i}`);
+        const previousCell = getByTestId(container, `cell-${i - 1}-${1}`);
+        const currentCell = getByTestId(container, `cell-${i}-${1}`);
 
-  for (let i = 1; i < assetsData.length; i++) {
-    getByTestId(container, `row-${i}`);
-    const previousCell = getByTestId(container, `cell-${i - 1}-${1}`);
-    const currentCell = getByTestId(container, `cell-${i}-${1}`);
+        expect(previousCell.innerHTML).not.toBeNaN();
+        expect(currentCell.innerHTML).not.toBeNaN();
+        expect(Number(previousCell.innerHTML)).toBeLessThanOrEqual(
+          Number(currentCell.innerHTML)
+        );
+      }
+    });
 
-    expect(previousCell.innerHTML).not.toBeNaN();
-    expect(currentCell.innerHTML).not.toBeNaN();
-    expect(Number(previousCell.innerHTML)).toBeGreaterThanOrEqual(
-      Number(currentCell.innerHTML)
-    );
-  }
-});
+    test("'Price' column in descending order on 'Price' header click twice", () => {
+      const { container } = render(
+        <Table assetsData={assetsData as Asset[]} />
+      );
 
-test("Sort by 'ticker' column ascending", () => {
-  const { container } = render(<Table assetsData={assetsData as Asset[]} />);
+      fireEvent.click(getByTestId(container, "column-header-price"));
+      fireEvent.click(getByTestId(container, "column-header-price"));
 
-  fireEvent.click(getByTestId(container, "column-header-ticker"));
+      for (let i = 1; i < assetsData.length; i++) {
+        getByTestId(container, `row-${i}`);
+        const previousCell = getByTestId(container, `cell-${i - 1}-${1}`);
+        const currentCell = getByTestId(container, `cell-${i}-${1}`);
 
-  for (let i = 1; i < assetsData.length; i++) {
-    getByTestId(container, `row-${i}`);
-    const previousCell = getByTestId(container, `cell-${i - 1}-${2}`);
-    const currentCell = getByTestId(container, `cell-${i}-${2}`);
+        expect(previousCell.innerHTML).not.toBeNaN();
+        expect(currentCell.innerHTML).not.toBeNaN();
+        expect(Number(previousCell.innerHTML)).toBeGreaterThanOrEqual(
+          Number(currentCell.innerHTML)
+        );
+      }
+    });
 
-    expect(previousCell.innerHTML <= currentCell.innerHTML).toBe(true);
-  }
-});
+    test("'Ticker' column in ascending order on 'Ticker' header click once", () => {
+      const { container } = render(
+        <Table assetsData={assetsData as Asset[]} />
+      );
 
-test("Sort by 'ticker' column descending", () => {
-  const { container } = render(<Table assetsData={assetsData as Asset[]} />);
+      fireEvent.click(getByTestId(container, "column-header-ticker"));
 
-  fireEvent.click(getByTestId(container, "column-header-ticker"));
-  fireEvent.click(getByTestId(container, "column-header-ticker"));
+      for (let i = 1; i < assetsData.length; i++) {
+        getByTestId(container, `row-${i}`);
+        const previousCell = getByTestId(container, `cell-${i - 1}-${2}`);
+        const currentCell = getByTestId(container, `cell-${i}-${2}`);
 
-  for (let i = 1; i < assetsData.length; i++) {
-    getByTestId(container, `row-${i}`);
-    const previousCell = getByTestId(container, `cell-${i - 1}-${2}`);
-    const currentCell = getByTestId(container, `cell-${i}-${2}`);
+        expect(previousCell.innerHTML <= currentCell.innerHTML).toBe(true);
+      }
+    });
 
-    expect(previousCell.innerHTML >= currentCell.innerHTML).toBe(true);
-  }
+    test("'Ticker' column in descending order on 'Ticker' header click twice", () => {
+      const { container } = render(
+        <Table assetsData={assetsData as Asset[]} />
+      );
+
+      fireEvent.click(getByTestId(container, "column-header-ticker"));
+      fireEvent.click(getByTestId(container, "column-header-ticker"));
+
+      for (let i = 1; i < assetsData.length; i++) {
+        getByTestId(container, `row-${i}`);
+        const previousCell = getByTestId(container, `cell-${i - 1}-${2}`);
+        const currentCell = getByTestId(container, `cell-${i}-${2}`);
+
+        expect(previousCell.innerHTML >= currentCell.innerHTML).toBe(true);
+      }
+    });
+  });
+
+  test("should show price in blue color if positive and red color if negative and default color if zero", () => {
+    const { container } = render(<Table assetsData={assetsData as Asset[]} />);
+
+    for (let i = 0; i < assetsData.length; i++) {
+      getByTestId(container, `row-${i}`);
+      const priceElement = getByTestId(container, `cell-${i}-${1}`);
+
+      expect(priceElement.innerHTML).not.toBeNaN();
+
+      expect(priceElement).toHaveClass(
+        Number(priceElement.innerHTML) > 0
+          ? "text-primary price"
+          : Number(priceElement.innerHTML) < 0
+          ? "text-danger price"
+          : "price",
+        { exact: true }
+      );
+    }
+  });
 });
