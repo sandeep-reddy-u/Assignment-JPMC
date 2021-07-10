@@ -75,6 +75,10 @@ describe("Should assets table", () => {
       );
 
       fireEvent.click(getByTestId(container, "column-header-assetClass"));
+      expect(getByTestId(container, "column-header-assetClass")).toHaveClass(
+        "ascending"
+      );
+
       for (let i = 1; i < assetsData.length; i++) {
         getByTestId(container, `row-${i}`);
         const previousCell = getByTestId(container, `cell-${i - 1}-${0}`);
@@ -98,6 +102,9 @@ describe("Should assets table", () => {
 
       fireEvent.click(getByTestId(container, "column-header-assetClass"));
       fireEvent.click(getByTestId(container, "column-header-assetClass"));
+      expect(getByTestId(container, "column-header-assetClass")).toHaveClass(
+        "descending"
+      );
 
       for (let i = 1; i < assetsData.length; i++) {
         getByTestId(container, `row-${i}`);
@@ -123,6 +130,9 @@ describe("Should assets table", () => {
       );
 
       fireEvent.click(getByTestId(container, "column-header-price"));
+      expect(getByTestId(container, "column-header-price")).toHaveClass(
+        "ascending"
+      );
 
       for (let i = 1; i < assetsData.length; i++) {
         getByTestId(container, `row-${i}`);
@@ -144,6 +154,9 @@ describe("Should assets table", () => {
 
       fireEvent.click(getByTestId(container, "column-header-price"));
       fireEvent.click(getByTestId(container, "column-header-price"));
+      expect(getByTestId(container, "column-header-price")).toHaveClass(
+        "descending"
+      );
 
       for (let i = 1; i < assetsData.length; i++) {
         getByTestId(container, `row-${i}`);
@@ -164,6 +177,9 @@ describe("Should assets table", () => {
       );
 
       fireEvent.click(getByTestId(container, "column-header-ticker"));
+      expect(getByTestId(container, "column-header-ticker")).toHaveClass(
+        "ascending"
+      );
 
       for (let i = 1; i < assetsData.length; i++) {
         getByTestId(container, `row-${i}`);
@@ -181,6 +197,9 @@ describe("Should assets table", () => {
 
       fireEvent.click(getByTestId(container, "column-header-ticker"));
       fireEvent.click(getByTestId(container, "column-header-ticker"));
+      expect(getByTestId(container, "column-header-ticker")).toHaveClass(
+        "descending"
+      );
 
       for (let i = 1; i < assetsData.length; i++) {
         getByTestId(container, `row-${i}`);
