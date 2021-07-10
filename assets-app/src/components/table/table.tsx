@@ -1,5 +1,4 @@
 import { MouseEvent, useEffect, useState } from "react";
-import sampleData from "../../data/sampleData.json";
 import {
   AssetClassConfig,
   columns,
@@ -10,9 +9,13 @@ import {
 import { Asset, SortDirection } from "../../types/common.types";
 import "./table.scss";
 
-const assetsData = sampleData as Asset[];
+interface Props {
+  assetsData: Asset[];
+}
 
-export default function Table() {
+export default function Table(props: Props) {
+  const { assetsData } = props;
+
   const [data, setData] = useState<Asset[]>(assetsData);
 
   const [sortBy, setSortBy] = useState<keyof Asset>();
@@ -26,7 +29,7 @@ export default function Table() {
       data.sort(getCompareFunction(sortBy, sortDirection));
       setData(data);
     }
-  }, [sortBy, sortDirection]);
+  }, [assetsData, sortBy, sortDirection]);
 
   function onHeaderClick(ev: MouseEvent<HTMLTableHeaderCellElement>) {
     const headerElement = ev.target as Element;
@@ -49,12 +52,13 @@ export default function Table() {
   return (
     <section>
       {data.length > 0 ? (
-        <table>
+        <table data-testid="assets-table">
           <thead>
             <tr>
               {columns.map((column) => (
                 <th
                   key={"header_" + column.property}
+                  data-testid={`column-header-${column.property}`}
                   onClick={onHeaderClick}
                   data-column-property={column.property}
                   className={getTableColumnHeaderClass(column.property, {
@@ -68,14 +72,16 @@ export default function Table() {
             </tr>
           </thead>
           <tbody>
-            {data.map((asset) => (
+            {data.map((asset, rowIndex) => (
               <tr
                 key={"row_" + asset.assetClass + "_" + asset.ticker}
+                data-testid={`row-${rowIndex}`}
                 className={AssetClassConfig[asset.assetClass].className}
               >
-                {columns.map((column) => (
+                {columns.map((column, columnIndex) => (
                   <td
                     key={"cell_" + column.property}
+                    data-testid={`cell-${rowIndex}-${columnIndex}`}
                     className={getTableCellClass(asset, column.property)}
                   >
                     {asset[column.property]}
