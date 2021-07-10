@@ -42,6 +42,14 @@ export function getCompareFunction(
         ? aConfig.priority - bConfig.priority
         : bConfig.priority - aConfig.priority;
     };
+  } else if (sortBy === "price") {
+    return (a: Asset, b: Asset) => {
+      const priceA = a[sortBy] || 0,
+        priceB = b[sortBy] || 0;
+      return sortDirection === SortDirection.ASC
+        ? priceA - priceB
+        : priceB - priceA;
+    };
   } else {
     return (a: Asset, b: Asset) => {
       if (a[sortBy] > b[sortBy]) {
