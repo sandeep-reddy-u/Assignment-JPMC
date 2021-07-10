@@ -21,7 +21,7 @@ export const AssetClassConfig: AssetColumnConfig = {
   },
   [AssetClass.MACRO]: {
     priority: 2,
-    className: "",
+    className: "bg-none",
   },
   [AssetClass.CREDIT]: {
     priority: 3,

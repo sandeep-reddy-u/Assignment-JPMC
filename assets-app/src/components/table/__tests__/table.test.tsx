@@ -6,7 +6,7 @@ import {
   fireEvent,
 } from "@testing-library/react";
 import Table from "../table";
-import assetsData from "../../../data/sampleData.json";
+import assetsData from "../../../data/testData.json";
 import { Asset, AssetClass } from "../../../types/common.types";
 import { AssetClassConfig, columns } from "../../../helper/common";
 
@@ -229,5 +229,18 @@ describe("Should assets table", () => {
         { exact: true }
       );
     }
+  });
+
+  test(`have color-coded
+  all Equities assets in blue color,
+  all Macro assets in blue color, 
+  all equities assets in blue color`, () => {
+    const { container } = render(<Table assetsData={assetsData as Asset[]} />);
+
+    assetsData.forEach((asset, index) => {
+      const className =
+        AssetClassConfig[asset.assetClass as AssetClass].className;
+      expect(getByTestId(container, `row-${index}`)).toHaveClass(className);
+    });
   });
 });
