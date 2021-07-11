@@ -12,11 +12,11 @@ JPMC Assignment project - 07-07-2021
 
     4. yarn start
 
-    This should bring your application at http://localhost:3000/
+    This should bring up the application at http://localhost:3000/
 
 # To run tests
 
-    1. Run command: yarn test --watchAll
+    yarn test --watchAll
 
 # Features in the application
 
